@@ -77,9 +77,9 @@ public class Archivo {
                 Vert++;
                 lector.nextLine();
             }
-            
+
             for (int i = 0; i < Vert; i++) {
-                model.addColumn(i+1);
+                model.addColumn(i + 1);
             }
             Scanner leer = new Scanner(archivo);
             while (leer.hasNextLine()) {
@@ -97,32 +97,33 @@ public class Archivo {
             // TODO enviar mensaje al usuario
         }
     }
-    
-    void cargarLista(JList lista, File archivo){
+
+    void cargarLista(JList lista, File archivo) {
         Nodo ptr = new Nodo();
-        try(Scanner lector = new Scanner(archivo)){
-            while(lector.hasNextLine()){
+        try (Scanner lector = new Scanner(archivo)) {
+            while (lector.hasNextLine()) {
                 String linea = lector.nextLine();
-                System.out.println(linea);
                 int Ver = 0;
                 for (int i = 0; i < linea.length(); i++) {
-                    if (i==0) {
-                        Ver = Integer.parseInt(linea.substring(0, 0));
-                        ptr = ptr.agregarLista(ptr,Ver);
-                    }
-                    try{
-                        System.out.println("entra aqui");
-                        int Adj = Integer.parseInt(linea.substring(i, i));
-                        int peso = Integer.parseInt(linea.substring(i+2, i+2));
-                        ptr = ptr.agregarSublista(ptr, Ver, Adj, peso);
-                    }catch(NumberFormatException ex){
-                        System.out.println("No es un numero");
+                    if (i == 0) {
+                        Ver = Integer.parseInt(linea.substring(0, 1));
+                        ptr = ptr.agregarLista(ptr, Ver);
+                    } else {
+                        try {
+                            if (!(linea.substring(i - 1, i).equals("(") && linea.substring(i + 1, i + 2).equals(")"))) {//Peso
+                                int Adj = Integer.parseInt(linea.substring(i, i + 1));
+                                int peso = Integer.parseInt(linea.substring(i + 2, i + 3));
+                                ptr = ptr.agregarSublista(ptr, Ver, Adj, peso);
+                            }
+                        } catch (NumberFormatException ex) {
+                            //No es un numero
+                        }
                     }
                 }
             }
-           ptr.mostrarMultilista(lista, ptr);
-            
-        }catch (FileNotFoundException ex) {
+            ptr.mostrarMultilista(lista, ptr);
+
+        } catch (FileNotFoundException ex) {
             // TODO enviar mensaje al usuario
         } catch (NumberFormatException ex) {
             // TODO enviar mensaje al usuario
@@ -130,5 +131,5 @@ public class Archivo {
             // TODO enviar mensaje al usuario
         }
     }
-    
+
 }
