@@ -5,6 +5,8 @@
  */
 package grafos;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
@@ -12,16 +14,29 @@ import javax.swing.JList;
  *
  * @author moralesea
  */
-public class Nodo {
-    int num;
-    Nodo linkNodo;
-    Subnodo linkSubnodo;
+public class List {
+    
+    Nodo ptr;
+
+    public List(Nodo ptr) {
+        this.ptr = ptr;
+    }
+    
+    class Nodo {
+
+        int num;
+        Nodo linkNodo;
+        Subnodo linkSubnodo;
+    }
+    
     class Subnodo {
+
         int num;
         int peso;
         Subnodo link;
     }
-     Nodo agregarLista(Nodo ptr, int elem) {
+    
+    Nodo agregarLista(Nodo ptr, int elem) {
         Nodo p = new Nodo();
         p.num = elem;
         // Lista vacía -> Nueva lista
@@ -37,7 +52,7 @@ public class Nodo {
         q.linkNodo = p; // Agregamos link
         return ptr;
     }
-
+    
     Nodo agregarSublista(Nodo ptr, int lista, int elem, int peso) {
         Nodo p = ptr;
         while (p != null && p.num != lista) {
@@ -62,7 +77,7 @@ public class Nodo {
         }
         return ptr;
     }
-
+    
     void mostrarMultilista(JList lista, Nodo ptr) {
         DefaultListModel model
                 = (DefaultListModel) lista.getModel();
@@ -80,4 +95,35 @@ public class Nodo {
         }
     }
     
+    String BFS(Nodo ptr) {
+        String Rec = "";
+        if (ptr != null) {
+            Queue c = new LinkedList<>();
+            c.add(ptr.num);
+            while (!c.isEmpty()) {
+                System.out.println("D:");
+                Nodo p = ptr;
+                int X = (int) c.remove();
+                Rec = Rec + Integer.toString(X) + ",";
+                while (p != null && p.num != X) {
+                    p = p.linkNodo;
+                }
+                Subnodo q = p.linkSubnodo;
+                if (q != null) {
+                    while (q.link != null) {
+                        if (!c.contains(q.num)) {
+                            c.add(q.num);
+                        }
+                        q = q.link;
+                    }
+                }else{
+                    if (!c.contains(p.num)) {
+                        c.add(p.num);
+                    }
+                }
+                
+            }
+        }
+        return Rec;
+    }
 }

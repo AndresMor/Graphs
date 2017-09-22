@@ -99,7 +99,8 @@ public class Archivo {
     }
 
     void cargarLista(JList lista, File archivo) {
-        Nodo ptr = new Nodo();
+        List.Nodo ptr = null;
+        List listr = new List(ptr);
         try (Scanner lector = new Scanner(archivo)) {
             while (lector.hasNextLine()) {
                 String linea = lector.nextLine();
@@ -107,13 +108,13 @@ public class Archivo {
                 for (int i = 0; i < linea.length(); i++) {
                     if (i == 0) {
                         Ver = Integer.parseInt(linea.substring(0, 1));
-                        ptr = ptr.agregarLista(ptr, Ver);
+                        ptr = listr.agregarLista(ptr, Ver);
                     } else {
                         try {
                             if (!(linea.substring(i - 1, i).equals("(") && linea.substring(i + 1, i + 2).equals(")"))) {//Peso
                                 int Adj = Integer.parseInt(linea.substring(i, i + 1));
                                 int peso = Integer.parseInt(linea.substring(i + 2, i + 3));
-                                ptr = ptr.agregarSublista(ptr, Ver, Adj, peso);
+                                ptr = listr.agregarSublista(ptr, Ver, Adj, peso);
                             }
                         } catch (NumberFormatException ex) {
                             //No es un numero
@@ -121,7 +122,7 @@ public class Archivo {
                     }
                 }
             }
-            ptr.mostrarMultilista(lista, ptr);
+            listr.mostrarMultilista(lista, ptr);
 
         } catch (FileNotFoundException ex) {
             // TODO enviar mensaje al usuario
@@ -131,5 +132,6 @@ public class Archivo {
             // TODO enviar mensaje al usuario
         }
     }
-
+    
+  
 }

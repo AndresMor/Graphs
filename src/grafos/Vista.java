@@ -23,16 +23,18 @@ public class Vista extends javax.swing.JFrame {
      */
    
 
-    Nodo ptr = new Nodo();
+    List.Nodo ptr;
     int[][] Adjacencia;
     File archivoM;
     File archivoL;
-
+    List Lista;
     public Vista() {
         initComponents();
         List.setModel(new DefaultListModel());
         archivoM = new File("archivos/matriz.txt");
         archivoL = new File("archivos/lista.txt");
+        ptr = null;
+        Lista = new List(ptr);
     }
     Archivo file = new Archivo(archivoM, archivoL);
 
@@ -55,6 +57,8 @@ public class Vista extends javax.swing.JFrame {
         List = new javax.swing.JList<>();
         Btn_Save = new javax.swing.JButton();
         Btn_Load = new javax.swing.JButton();
+        Btn_Dfs = new javax.swing.JButton();
+        Btn_Bfs = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -97,6 +101,15 @@ public class Vista extends javax.swing.JFrame {
             }
         });
 
+        Btn_Dfs.setText("DFS");
+
+        Btn_Bfs.setText("BFS");
+        Btn_Bfs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_BfsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -110,7 +123,12 @@ public class Vista extends javax.swing.JFrame {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1)
+                        .addGap(21, 21, 21))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Btn_Bfs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(Btn_Done, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(Btn_Save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -118,34 +136,35 @@ public class Vista extends javax.swing.JFrame {
                             .addComponent(Btn_Load, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(Vertices, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(21, 21, 21)))
+                                .addGap(12, 12, 12))
+                            .addComponent(Btn_Dfs, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(20, 20, 20))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(35, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(Btn_Done, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Vertices))
+                            .addComponent(Vertices, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(Btn_Load, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Btn_Save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(23, 23, 23))))
+                            .addComponent(Btn_Save))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Btn_Dfs, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Btn_Bfs)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(59, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(23, 23, 23))
         );
 
         pack();
@@ -157,12 +176,12 @@ public class Vista extends javax.swing.JFrame {
         Cero(V);
         for (int i = 0; i < V; i++) {
             int A = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " numero de aristas para el vertice " + Integer.toString(i + 1)));
-            ptr = ptr.agregarLista(ptr, i+1);
+            ptr = Lista.agregarLista(ptr, i+1);
             for (int j = 0; j < A; j++) {
                 int P = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " peso para la arista " + Integer.toString(j + 1)));
                 int D = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " vertice a la que se va dirigir la arista " + Integer.toString(j + 1)));
                 Adjacencia[i][D-1] = P;
-                ptr = ptr.agregarSublista(ptr, i+1, D, P);
+                ptr = Lista.agregarSublista(ptr, i+1, D, P);
             }
         }
         DefaultTableModel model = (DefaultTableModel) Matrix_Adj.getModel();
@@ -176,7 +195,7 @@ public class Vista extends javax.swing.JFrame {
             }
             model.addRow(Vec);
         }
-        ptr.mostrarMultilista(List, ptr);
+        Lista.mostrarMultilista(List, ptr);
         file.guardarMatriz(Matrix_Adj, archivoM);
         file.guardarLista(List, archivoL);
     }//GEN-LAST:event_Btn_DoneActionPerformed
@@ -212,6 +231,12 @@ public class Vista extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_Btn_LoadActionPerformed
+
+    private void Btn_BfsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_BfsActionPerformed
+        String M;
+        M = Lista.BFS(ptr);
+        System.out.println(M+" Recorrido");
+    }//GEN-LAST:event_Btn_BfsActionPerformed
 
     /**
      * @param Ver
@@ -260,6 +285,8 @@ public class Vista extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Btn_Bfs;
+    private javax.swing.JButton Btn_Dfs;
     private javax.swing.JButton Btn_Done;
     private javax.swing.JButton Btn_Load;
     private javax.swing.JButton Btn_Save;
