@@ -6,11 +6,8 @@
 package grafos;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
@@ -24,21 +21,9 @@ public class Vista extends javax.swing.JFrame {
     /**
      * Creates new form Vista
      */
-    class Nodo {
+   
 
-        int num;
-        Nodo linkNodo;
-        Subnodo linkSubnodo;
-    }
-
-    class Subnodo {
-
-        int num;
-        int peso;
-        Subnodo link;
-    }
-
-    Nodo ptr;
+    Nodo ptr = new Nodo();
     int[][] Adjacencia;
     File archivoM;
     File archivoL;
@@ -46,7 +31,6 @@ public class Vista extends javax.swing.JFrame {
     public Vista() {
         initComponents();
         List.setModel(new DefaultListModel());
-        ptr = null;
         archivoM = new File("archivos/matriz.txt");
         archivoL = new File("archivos/lista.txt");
     }
@@ -127,7 +111,7 @@ public class Vista extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Btn_Done, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                            .addComponent(Btn_Done, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(Btn_Save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,17 +157,17 @@ public class Vista extends javax.swing.JFrame {
         Cero(V);
         for (int i = 0; i < V; i++) {
             int A = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " numero de aristas para el vertice " + Integer.toString(i + 1)));
-            ptr = agregarLista(ptr, i + 1);
+            ptr = ptr.agregarLista(ptr, i+1);
             for (int j = 0; j < A; j++) {
                 int P = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " peso para la arista " + Integer.toString(j + 1)));
                 int D = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " vertice a la que se va dirigir la arista " + Integer.toString(j + 1)));
-                Adjacencia[i][D - 1] = P;
-                ptr = agregarSublista(ptr, i + 1, D, P);
+                Adjacencia[i][D-1] = P;
+                ptr = ptr.agregarSublista(ptr, i+1, D, P);
             }
         }
         DefaultTableModel model = (DefaultTableModel) Matrix_Adj.getModel();
         for (int i = 0; i < V; i++) {
-            model.addColumn(i + 1);
+            model.addColumn(i+1);
         }
         for (int i = 0; i < V; i++) {
             Object[] Vec = new Object[V];
@@ -192,7 +176,7 @@ public class Vista extends javax.swing.JFrame {
             }
             model.addRow(Vec);
         }
-        mostrarMultilista(List, ptr);
+        ptr.mostrarMultilista(List, ptr);
         file.guardarMatriz(Matrix_Adj, archivoM);
         file.guardarLista(List, archivoL);
     }//GEN-LAST:event_Btn_DoneActionPerformed
@@ -207,7 +191,7 @@ public class Vista extends javax.swing.JFrame {
         // Si el usuario escogió abrir
         if (opcion == JFileChooser.APPROVE_OPTION) {
             // Asignar archivo y nombre.
-            int seleccion = JOptionPane.showOptionDialog(null, "Seleccione una opcion",
+            int seleccion = JOptionPane.showOptionDialog(null, "Seleccione una opcion: ",
                     "Cargar archivo ", JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE, null,// null para icono por defecto.
                     new Object[]{"Matriz ", "Lista "}, "Matriz");
@@ -218,7 +202,8 @@ public class Vista extends javax.swing.JFrame {
                         file.cargarMatriz(Matrix_Adj, archivoM);
                         break;
                     case 2:
-                        
+                        archivoL = FileChooser.getSelectedFile();
+                        file.cargarLista(List, archivoL);
                         break;
                 }
             }
@@ -240,70 +225,7 @@ public class Vista extends javax.swing.JFrame {
         }
     }
 
-    Nodo agregarLista(Nodo ptr, int elem) {
-        Nodo p = new Nodo();
-        p.num = elem;
-
-        // Lista vacía -> Nueva lista
-        if (ptr == null) {
-            return p;
-        }
-
-        // Lista no vacía
-        Nodo q = ptr;
-        // Buscar último
-        while (q.linkNodo != null) {
-            q = q.linkNodo;
-        }
-        q.linkNodo = p; // Agregamos link
-        return ptr;
-    }
-
-    Nodo agregarSublista(Nodo ptr, int lista, int elem, int peso) {
-        Nodo p = ptr;
-
-        while (p != null && p.num != lista) {
-            p = p.linkNodo;
-        }
-
-        if (p == null) {
-            return ptr;
-        }
-
-        Subnodo q = p.linkSubnodo;
-        Subnodo r = new Subnodo();
-        r.num = elem;
-        r.peso = peso;
-
-        // Lista vacía
-        if (q == null) {
-            p.linkSubnodo = r;
-        } else {
-            while (q.link != null) {
-                q = q.link;
-            }
-            q.link = r;
-        }
-        return ptr;
-    }
-
-    void mostrarMultilista(JList lista, Nodo ptr) {
-        DefaultListModel model
-                = (DefaultListModel) lista.getModel();
-        model.clear();
-
-        Nodo p = ptr;
-        while (p != null) {
-            String Sub = "";
-            Subnodo q = p.linkSubnodo;
-            while (q != null) {
-                Sub = Sub + "->" + q.num + "(" + q.peso + ")";
-                q = q.link;
-            }
-            model.addElement(p.num + Sub);
-            p = p.linkNodo;
-        }
-    }
+   
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
