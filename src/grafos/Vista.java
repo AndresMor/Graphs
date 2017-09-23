@@ -6,6 +6,7 @@
 package grafos;
 
 import java.io.File;
+import java.util.Stack;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -21,13 +22,12 @@ public class Vista extends javax.swing.JFrame {
     /**
      * Creates new form Vista
      */
-   
-
     List.Nodo ptr;
     int[][] Adjacencia;
     File archivoM;
     File archivoL;
     List Lista;
+
     public Vista() {
         initComponents();
         List.setModel(new DefaultListModel());
@@ -102,6 +102,11 @@ public class Vista extends javax.swing.JFrame {
         });
 
         Btn_Dfs.setText("DFS");
+        Btn_Dfs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_DfsActionPerformed(evt);
+            }
+        });
 
         Btn_Bfs.setText("BFS");
         Btn_Bfs.addActionListener(new java.awt.event.ActionListener() {
@@ -176,17 +181,17 @@ public class Vista extends javax.swing.JFrame {
         Cero(V);
         for (int i = 0; i < V; i++) {
             int A = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " numero de aristas para el vertice " + Integer.toString(i + 1)));
-            ptr = Lista.agregarLista(ptr, i+1);
+            ptr = Lista.agregarLista(ptr, i + 1);
             for (int j = 0; j < A; j++) {
                 int P = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " peso para la arista " + Integer.toString(j + 1)));
                 int D = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " vertice a la que se va dirigir la arista " + Integer.toString(j + 1)));
-                Adjacencia[i][D-1] = P;
-                ptr = Lista.agregarSublista(ptr, i+1, D, P);
+                Adjacencia[i][D - 1] = P;
+                ptr = Lista.agregarSublista(ptr, i + 1, D, P);
             }
         }
         DefaultTableModel model = (DefaultTableModel) Matrix_Adj.getModel();
         for (int i = 0; i < V; i++) {
-            model.addColumn(i+1);
+            model.addColumn(i + 1);
         }
         for (int i = 0; i < V; i++) {
             Object[] Vec = new Object[V];
@@ -215,7 +220,7 @@ public class Vista extends javax.swing.JFrame {
                     JOptionPane.QUESTION_MESSAGE, null,// null para icono por defecto.
                     new Object[]{"Matriz ", "Lista "}, "Matriz");
             if (seleccion != -1) {
-                switch(seleccion+1){
+                switch (seleccion + 1) {
                     case 1:
                         archivoM = FileChooser.getSelectedFile();
                         file.cargarMatriz(Matrix_Adj, archivoM);
@@ -227,7 +232,6 @@ public class Vista extends javax.swing.JFrame {
                 }
             }
 
-            
         }
 
     }//GEN-LAST:event_Btn_LoadActionPerformed
@@ -235,8 +239,18 @@ public class Vista extends javax.swing.JFrame {
     private void Btn_BfsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_BfsActionPerformed
         String M;
         M = Lista.BFS(ptr);
-        System.out.println(M+" Recorrido");
+        System.out.println(M + " Recorrido");
     }//GEN-LAST:event_Btn_BfsActionPerformed
+
+    private void Btn_DfsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_DfsActionPerformed
+        Stack<String> M = new Stack<String>();
+        String S = "";
+        M = Lista.DFS(ptr);
+        while(!M.isEmpty()){
+            S=M.pop()+","+S;
+        }
+        System.out.println(S+ " Recorrido");
+    }//GEN-LAST:event_Btn_DfsActionPerformed
 
     /**
      * @param Ver
@@ -249,8 +263,6 @@ public class Vista extends javax.swing.JFrame {
             }
         }
     }
-
-   
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */

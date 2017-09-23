@@ -7,6 +7,7 @@ package grafos;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 
@@ -15,27 +16,27 @@ import javax.swing.JList;
  * @author moralesea
  */
 public class List {
-    
+
     Nodo ptr;
 
     public List(Nodo ptr) {
         this.ptr = ptr;
     }
-    
+
     class Nodo {
 
         int num;
         Nodo linkNodo;
         Subnodo linkSubnodo;
     }
-    
+
     class Subnodo {
 
         int num;
         int peso;
         Subnodo link;
     }
-    
+
     Nodo agregarLista(Nodo ptr, int elem) {
         Nodo p = new Nodo();
         p.num = elem;
@@ -52,7 +53,7 @@ public class List {
         q.linkNodo = p; // Agregamos link
         return ptr;
     }
-    
+
     Nodo agregarSublista(Nodo ptr, int lista, int elem, int peso) {
         Nodo p = ptr;
         while (p != null && p.num != lista) {
@@ -77,7 +78,7 @@ public class List {
         }
         return ptr;
     }
-    
+
     void mostrarMultilista(JList lista, Nodo ptr) {
         DefaultListModel model
                 = (DefaultListModel) lista.getModel();
@@ -94,14 +95,13 @@ public class List {
             p = p.linkNodo;
         }
     }
-    
+
     String BFS(Nodo ptr) {
         String Rec = "";
         if (ptr != null) {
             Queue c = new LinkedList<>();
             c.add(ptr.num);
             while (!c.isEmpty()) {
-                System.out.println("D:");
                 Nodo p = ptr;
                 int X = (int) c.remove();
                 Rec = Rec + Integer.toString(X) + ",";
@@ -109,21 +109,42 @@ public class List {
                     p = p.linkNodo;
                 }
                 Subnodo q = p.linkSubnodo;
-                if (q != null) {
-                    while (q.link != null) {
-                        if (!c.contains(q.num)) {
-                            c.add(q.num);
-                        }
-                        q = q.link;
+                while (q != null) {
+                    if (!c.contains(q.num)) {
+                        c.add(q.num);
                     }
-                }else{
-                    if (!c.contains(p.num)) {
-                        c.add(p.num);
-                    }
+                    q = q.link;
                 }
-                
+
             }
         }
         return Rec;
+    }
+    
+    Stack<String> DFS(Nodo ptr){
+        Stack<String> Recor = new Stack<String>();
+        if (ptr != null) {
+            Stack<String> pila = new Stack<String>();
+            pila.push(Integer.toString(ptr.num));
+            while(!pila.empty()){
+                Nodo p = ptr;
+                String X = pila.pop();
+               // System.out.println(X+" Meto");
+                Recor.push(X);
+                while (p != null && p.num != Integer.parseInt(X)) {
+                    p = p.linkNodo;
+                }
+                Subnodo q = p.linkSubnodo;
+                while (q != null) {
+                  //  System.out.println(q.num+ " Adyacentes");
+                    if (!Recor.contains(Integer.toString(q.num))) {
+                     //   System.out.println(q.num +" Agredo");
+                        pila.push(Integer.toString(q.num));
+                    }
+                    q = q.link;
+                }
+            }
+        }
+        return Recor;
     }
 }
