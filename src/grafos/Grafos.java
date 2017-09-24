@@ -19,6 +19,7 @@ public class Grafos {
         Vista M = new Vista();
         M.setVisible(true);
         M.setLocationRelativeTo(null);
+        M.setTitle("Graph ");
     }
     
 }

@@ -73,22 +73,29 @@ public class Archivo {
         try (Scanner lector = new Scanner(archivo)) {
             // Mientras el archivo tenga otra línea.
             int Vert = 0;
-            while (lector.hasNextLine()) {
-                Vert++;
-                lector.nextLine();
-            }
 
+            String L = lector.nextLine();
+            for (int i = 0; i < L.length(); i++) {
+                if (L.substring(i, i + 1).equals(",")) {
+                    Vert++;
+                }
+            }
+            Vert++;
             for (int i = 0; i < Vert; i++) {
                 model.addColumn(i + 1);
             }
             Scanner leer = new Scanner(archivo);
-            while (leer.hasNextLine()) {
+            for (int i = 0; i < Vert; i++) {
                 // Pedir la linea
                 String linea = leer.nextLine();
-                // Separar los datos
-                Object[] datos = linea.split(",");
-                model.addRow(datos);
+                if (!linea.equals("")) {
+                    // Separar los datos
+                    Object[] datos = linea.split(",");
+                    model.addRow(datos);
+                }
+                
             }
+
         } catch (FileNotFoundException ex) {
             // TODO enviar mensaje al usuario
         } catch (NumberFormatException ex) {
@@ -132,6 +139,5 @@ public class Archivo {
             // TODO enviar mensaje al usuario
         }
     }
-    
-  
+
 }

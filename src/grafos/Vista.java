@@ -6,6 +6,7 @@
 package grafos;
 
 import java.io.File;
+import java.util.Queue;
 import java.util.Stack;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
@@ -50,18 +51,24 @@ public class Vista extends javax.swing.JFrame {
         FileChooser = new javax.swing.JFileChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         Matrix_Adj = new javax.swing.JTable();
-        Btn_Done = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        Btn_Bfs = new javax.swing.JButton();
+        Btn_Dfs = new javax.swing.JButton();
+        Btn_Dijks = new javax.swing.JButton();
+        Btn_Load = new javax.swing.JButton();
+        Btn_Save = new javax.swing.JButton();
         Vertices = new javax.swing.JSpinner();
+        Btn_Done = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         List = new javax.swing.JList<>();
-        Btn_Save = new javax.swing.JButton();
-        Btn_Load = new javax.swing.JButton();
-        Btn_Dfs = new javax.swing.JButton();
-        Btn_Bfs = new javax.swing.JButton();
+        Txt_Show = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        Matrix_Adj.setFont(new java.awt.Font("Georgia", 1, 10)); // NOI18N
         Matrix_Adj.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -72,19 +79,75 @@ public class Vista extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(Matrix_Adj);
 
-        Btn_Done.setText("Crear");
-        Btn_Done.addActionListener(new java.awt.event.ActionListener() {
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 11, 388, 232));
+
+        jPanel1.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel1.setForeground(new java.awt.Color(204, 0, 102));
+        jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        Btn_Bfs.setFont(new java.awt.Font("Georgia", 1, 12)); // NOI18N
+        Btn_Bfs.setText("BFS");
+        Btn_Bfs.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Btn_Bfs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Btn_DoneActionPerformed(evt);
+                Btn_BfsActionPerformed(evt);
+            }
+        });
+
+        Btn_Dfs.setFont(new java.awt.Font("Georgia", 1, 12)); // NOI18N
+        Btn_Dfs.setText("DFS");
+        Btn_Dfs.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Btn_Dfs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_DfsActionPerformed(evt);
+            }
+        });
+
+        Btn_Dijks.setFont(new java.awt.Font("Georgia", 1, 12)); // NOI18N
+        Btn_Dijks.setText("Dijkstra");
+        Btn_Dijks.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Btn_Dijks.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_DijksActionPerformed(evt);
+            }
+        });
+
+        Btn_Load.setFont(new java.awt.Font("Georgia", 1, 12)); // NOI18N
+        Btn_Load.setText("Cargar");
+        Btn_Load.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Btn_Load.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_LoadActionPerformed(evt);
+            }
+        });
+
+        Btn_Save.setFont(new java.awt.Font("Georgia", 1, 12)); // NOI18N
+        Btn_Save.setText("Guardar");
+        Btn_Save.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Btn_Save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_SaveActionPerformed(evt);
             }
         });
 
         Vertices.setModel(new javax.swing.SpinnerNumberModel(0, 0, 15, 1));
         Vertices.setInheritsPopupMenu(true);
 
+        Btn_Done.setFont(new java.awt.Font("Georgia", 1, 12)); // NOI18N
+        Btn_Done.setText("Crear");
+        Btn_Done.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        Btn_Done.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Btn_Done.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Btn_DoneActionPerformed(evt);
+            }
+        });
+
         jLabel1.setFont(new java.awt.Font("Georgia", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Numero de Vertices: ");
 
+        List.setFont(new java.awt.Font("Georgia", 1, 12)); // NOI18N
         List.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
@@ -92,85 +155,75 @@ public class Vista extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(List);
 
-        Btn_Save.setText("Guardar");
+        Txt_Show.setFont(new java.awt.Font("Georgia", 1, 10)); // NOI18N
+        Txt_Show.setText("                     ");
 
-        Btn_Load.setText("Cargar");
-        Btn_Load.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Btn_LoadActionPerformed(evt);
-            }
-        });
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/line-graph.png"))); // NOI18N
 
-        Btn_Dfs.setText("DFS");
-        Btn_Dfs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Btn_DfsActionPerformed(evt);
-            }
-        });
-
-        Btn_Bfs.setText("BFS");
-        Btn_Bfs.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                Btn_BfsActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel1)
-                        .addGap(21, 21, 21))
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Btn_Bfs, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Btn_Done, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Btn_Save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Btn_Load, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(Vertices, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(12, 12, 12))
-                            .addComponent(Btn_Dfs, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(20, 20, 20))
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(Txt_Show, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(Btn_Bfs, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(Btn_Dfs, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(Btn_Dijks, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addComponent(Btn_Load, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(52, 52, 52))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(Btn_Done, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(34, 34, 34)
+                                .addComponent(Vertices, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addGap(25, 25, 25))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Btn_Done, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Vertices, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(Btn_Load, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(Btn_Save))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Btn_Dfs, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(Btn_Bfs)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(59, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(23, 23, 23))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Btn_Done, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Vertices, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Btn_Bfs, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Btn_Dfs, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Btn_Save, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Btn_Dijks, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Btn_Load, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Txt_Show, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 300));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -180,13 +233,17 @@ public class Vista extends javax.swing.JFrame {
         Adjacencia = new int[V][V];
         Cero(V);
         for (int i = 0; i < V; i++) {
-            int A = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " numero de aristas para el vertice " + Integer.toString(i + 1)));
+            try{
+            int A = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " numero de aristas para el vertice: " + Integer.toString(i + 1) + " "));
             ptr = Lista.agregarLista(ptr, i + 1);
             for (int j = 0; j < A; j++) {
-                int P = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " peso para la arista " + Integer.toString(j + 1)));
-                int D = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " vertice a la que se va dirigir la arista " + Integer.toString(j + 1)));
+                int D = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " vertice a la que se va dirigir la arista: " + Integer.toString(j + 1) + " "));
+                int P = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " peso para la arista: " + Integer.toString(j + 1) + " "));
                 Adjacencia[i][D - 1] = P;
                 ptr = Lista.agregarSublista(ptr, i + 1, D, P);
+            }
+            }catch( java.lang.NumberFormatException Ex){
+            
             }
         }
         DefaultTableModel model = (DefaultTableModel) Matrix_Adj.getModel();
@@ -201,8 +258,6 @@ public class Vista extends javax.swing.JFrame {
             model.addRow(Vec);
         }
         Lista.mostrarMultilista(List, ptr);
-        file.guardarMatriz(Matrix_Adj, archivoM);
-        file.guardarLista(List, archivoL);
     }//GEN-LAST:event_Btn_DoneActionPerformed
 
     private void Btn_LoadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_LoadActionPerformed
@@ -224,6 +279,18 @@ public class Vista extends javax.swing.JFrame {
                     case 1:
                         archivoM = FileChooser.getSelectedFile();
                         file.cargarMatriz(Matrix_Adj, archivoM);
+                        DefaultTableModel model = (DefaultTableModel) Matrix_Adj.getModel();
+                        int Vert = model.getColumnCount();
+                        ptr = null;
+                        for (int i = 0; i < Vert; i++) {
+                            ptr = Lista.agregarLista(ptr, i+1);
+                            for (int j = 0; j < Vert; j++) {
+                                if (Integer.parseInt((String) model.getValueAt(i, j))!=0) {
+                                    ptr = Lista.agregarSublista(ptr, i+1, j+1, Integer.parseInt((String) model.getValueAt(i,j)));
+                                }
+                            }
+                        }
+                        Lista.mostrarMultilista(List, ptr);
                         break;
                     case 2:
                         archivoL = FileChooser.getSelectedFile();
@@ -237,20 +304,42 @@ public class Vista extends javax.swing.JFrame {
     }//GEN-LAST:event_Btn_LoadActionPerformed
 
     private void Btn_BfsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_BfsActionPerformed
-        String M;
-        M = Lista.BFS(ptr);
-        System.out.println(M + " Recorrido");
+        Queue M = Lista.BFS(ptr);
+        String Show = "";
+        while (!M.isEmpty()) {
+            Show = Show + M.remove() + ",";
+        }
+        Show = Show.substring(0, Show.length() - 1);
+        Txt_Show.setText(Show);
     }//GEN-LAST:event_Btn_BfsActionPerformed
 
     private void Btn_DfsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_DfsActionPerformed
-        Stack<String> M = new Stack<String>();
-        String S = "";
-        M = Lista.DFS(ptr);
-        while(!M.isEmpty()){
-            S=M.pop()+","+S;
+        Stack<String> M = Lista.DFS(ptr);
+        String Show = "";
+        while (!M.isEmpty()) {
+            Show = M.pop() + "," + Show;
         }
-        System.out.println(S+ " Recorrido");
+        Show = Show.substring(0, Show.length() - 1);
+        Txt_Show.setText(Show);
     }//GEN-LAST:event_Btn_DfsActionPerformed
+
+    private void Btn_DijksActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_DijksActionPerformed
+        int A = Integer.parseInt(JOptionPane.showInputDialog("Ingrese un" + " el vertice de inicio: "));
+        int[] Dis;
+        Dis = Lista.Dijkstra(ptr, A);
+        int V = NroVert();
+        String X = "";
+        for (int i = 0; i < V; i++) {
+            X = X+(i+1)+"["+Dis[i]+"]"+",";
+        }
+        X = X.substring(0, X.length()-1);
+        Txt_Show.setText(X);
+    }//GEN-LAST:event_Btn_DijksActionPerformed
+
+    private void Btn_SaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Btn_SaveActionPerformed
+        file.guardarMatriz(Matrix_Adj, archivoM);
+        file.guardarLista(List, archivoL);
+    }//GEN-LAST:event_Btn_SaveActionPerformed
 
     /**
      * @param Ver
@@ -262,6 +351,15 @@ public class Vista extends javax.swing.JFrame {
                 Adjacencia[i][j] = 0;
             }
         }
+    }
+    public int NroVert(){
+        int Vert = 0;
+        List.Nodo P = ptr;
+        while(P!=null){
+            Vert++;
+            P = P.linkNodo;
+        }
+        return Vert;
     }
 
     public static void main(String args[]) {
@@ -299,14 +397,18 @@ public class Vista extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Btn_Bfs;
     private javax.swing.JButton Btn_Dfs;
+    private javax.swing.JButton Btn_Dijks;
     private javax.swing.JButton Btn_Done;
     private javax.swing.JButton Btn_Load;
     private javax.swing.JButton Btn_Save;
     private javax.swing.JFileChooser FileChooser;
     private javax.swing.JList<String> List;
     private javax.swing.JTable Matrix_Adj;
+    private javax.swing.JTextField Txt_Show;
     private javax.swing.JSpinner Vertices;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables

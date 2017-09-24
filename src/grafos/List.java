@@ -16,7 +16,6 @@ import javax.swing.JList;
  * @author moralesea
  */
 public class List {
-
     Nodo ptr;
 
     public List(Nodo ptr) {
@@ -24,14 +23,12 @@ public class List {
     }
 
     class Nodo {
-
         int num;
         Nodo linkNodo;
         Subnodo linkSubnodo;
     }
 
     class Subnodo {
-
         int num;
         int peso;
         Subnodo link;
@@ -66,7 +63,6 @@ public class List {
         Subnodo r = new Subnodo();
         r.num = elem;
         r.peso = peso;
-
         // Lista vacía
         if (q == null) {
             p.linkSubnodo = r;
@@ -96,29 +92,28 @@ public class List {
         }
     }
 
-    String BFS(Nodo ptr) {
-        String Rec = "";
+    Queue BFS(Nodo ptr) {
+        Queue Recor = new LinkedList<>();
         if (ptr != null) {
             Queue c = new LinkedList<>();
             c.add(ptr.num);
             while (!c.isEmpty()) {
                 Nodo p = ptr;
                 int X = (int) c.remove();
-                Rec = Rec + Integer.toString(X) + ",";
+                Recor.add(X);
                 while (p != null && p.num != X) {
                     p = p.linkNodo;
                 }
                 Subnodo q = p.linkSubnodo;
                 while (q != null) {
-                    if (!c.contains(q.num)) {
+                    if (!c.contains(q.num)&& !Recor.contains(q.num)) {
                         c.add(q.num);
                     }
                     q = q.link;
                 }
-
             }
         }
-        return Rec;
+        return Recor;
     }
     
     Stack<String> DFS(Nodo ptr){
@@ -129,16 +124,13 @@ public class List {
             while(!pila.empty()){
                 Nodo p = ptr;
                 String X = pila.pop();
-               // System.out.println(X+" Meto");
                 Recor.push(X);
                 while (p != null && p.num != Integer.parseInt(X)) {
                     p = p.linkNodo;
                 }
                 Subnodo q = p.linkSubnodo;
                 while (q != null) {
-                  //  System.out.println(q.num+ " Adyacentes");
-                    if (!Recor.contains(Integer.toString(q.num))) {
-                     //   System.out.println(q.num +" Agredo");
+                    if (!Recor.contains(Integer.toString(q.num))&& !pila.contains(Integer.toString(q.num))) {
                         pila.push(Integer.toString(q.num));
                     }
                     q = q.link;
@@ -146,5 +138,39 @@ public class List {
             }
         }
         return Recor;
+    }
+   
+    int [] Dijkstra(Nodo ptr,int Base){
+        int[] Distancia = new int[100];
+        Base = Base-1;
+        if (ptr != null)  {
+            Queue c = new LinkedList<>();
+            Distancia[Base] = 0;
+            c.add(ptr.num);
+            int Ant = 0;
+            int i = 0;
+            while(!c.isEmpty()){
+                Nodo p = ptr;
+                int X = (int)c.remove();
+                while (p != null && p.num != X) {
+                    p = p.linkNodo;
+                }
+                Subnodo q = p.linkSubnodo;
+                while (q != null) {
+                    if (!c.contains(q.num)) {
+                        c.add(q.num);
+                        Base++;
+                        Distancia[Base]=q.peso+ Ant;
+                    }
+                    if (c.contains(q.num)&&Distancia[Base]>(Ant+q.peso)) {
+                        Distancia[Base] = q.peso+Ant;
+                    }
+                    q = q.link;
+                }
+                i++;
+                Ant = Distancia[i];
+            }
+        }
+        return Distancia;
     }
 }
